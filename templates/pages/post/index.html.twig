@@ -1,11 +1,36 @@
 {% extends 'layouts/base.html.twig' %}
 
 {% block body %}
-<h1>Tout mes post</h1>
+	<h1>Tout mes post</h1>
 
-{% for post in posts %}
-  <h2>{{ post.title }}</h2>
-  <p>{{ post.content }}</p>
-{% endfor %}
+	<div class="my-4">
+		<a href="{{ path('posts_create') }}" class="btn btn-primary">Créer un post</a>
+	</div>
 
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th style="width: 80%;">Titre</th>
+				<th style="width: 20%;">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for post in posts %}
+				<tr>
+					<td>{{ post.title }}</td>
+					<td class="d-flex justify-content-around">
+						<a class="btn btn-success" href="{{ path('posts_show', {id: post.id}) }}">
+							Voir
+						</a>
+						<a class="btn btn-warning" href="{{ path('posts_edit', {id: post.id} )}}">Editer</a>
+						<form action="{{ path('posts_delete', {id: post.id})}}" method="POST">
+							<input type="hidden" name="_method" value="DELETE">
+							<input type="hidden" name="_token" value="{{ csrf_token('DEL' ~ post.id) }}">
+							<input type="submit" class="btn btn-danger" value="supprimer" onclick="return confirm('Confirmez la suppression ?')">
+						</form>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 {% endblock %}
